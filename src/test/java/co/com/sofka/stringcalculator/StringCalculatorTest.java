@@ -1,5 +1,6 @@
 package co.com.sofka.stringcalculator;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 
 import org.junit.Before;
@@ -14,12 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StringCalculatorTest {
 
-    private StringCalculator stringCalculator;
-
-    @Before
-    public void before() {
-        stringCalculator = new StringCalculator();
-    }
+    private StringCalculator stringCalculator = new StringCalculator();
 
     @Test
     public void return_0() {
@@ -86,31 +82,33 @@ class StringCalculatorTest {
         assertThat(stringCalculator.add("//z\n1z2"), is(3));
     }
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void throw_exception_negatives_not_allowed_listing_numbers() {
-        exceptionRule.expect(StringCalculator.NegativesNumbersException.class);
-        exceptionRule.expectMessage("negatives not allowed: -1");
-        stringCalculator.add("-1");
+        Exception exception = assertThrows(StringCalculator.NegativesNumbersException.class,()->{
+            stringCalculator.add("-1");
+        });
+        String expectMessage = "negatives not allowed: -1";
+        assertEquals(expectMessage, exception.getMessage());
     }
 
     @Test
     public void throw_exception_negatives_not_allowed_listing_numbers_two_negatives() {
-        exceptionRule.expect(StringCalculator.NegativesNumbersException.class);
-        exceptionRule.expectMessage("negatives not allowed: -1, -2");
-        stringCalculator.add("-1,-2");
+        Exception exception = assertThrows(StringCalculator.NegativesNumbersException.class,()->{
+            stringCalculator.add("-1,-2");
+        });
+        String expectMessage = "negatives not allowed: -1, -2";
+        assertEquals(expectMessage, exception.getMessage());
     }
 
     @Test
     public void return_8() {
-        assertThat(stringCalculator.add("8,1001"), is(8));
+        MatcherAssert.assertThat(stringCalculator.add("8,1001"), is(8));
     }
 
     @Test
     public void return_1008() {
-        assertThat(stringCalculator.add("8,1000"), is(1008));
+        MatcherAssert.assertThat(stringCalculator.add("8,1000"), is(1008));
     }
 
     //Delimitador puede tener cualquier largo respetando el sigiente formato:
